@@ -1,6 +1,7 @@
 # PORQUÊ: serve o index.html único via nginx. Sem build, sem runtime.
-# O Railway injeta $PORT, o nginx escuta nele com fallback 8080.
+# Porta 8080 fixa, igual à variável PORT do serviço e ao target do domínio.
 FROM nginx:1.27-alpine
 COPY index.html /usr/share/nginx/html/index.html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 8080
-CMD ["sh", "-c", "sed -i \"s/listen 80;/listen ${PORT:-8080};/\" /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+CMD ["nginx", "-g", "daemon off;"]
