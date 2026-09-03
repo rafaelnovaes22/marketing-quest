@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marketing Quest, aprenda marketing jogando</title>
+<meta name="description" content="MVP: aprenda posicionamento, persona, funil, copy e métricas com quizzes, XP, níveis e selos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0a14;--card:#171226;--ink:#f4f1ff;--mut:#a79fc4;--ln:rgba(244,241,255,.13);--ac:#b6f34a;--pu:#8b5cf6;--pk:#f472b6;--rd:20px}
+body{background:var(--bg);color:var(--ink);font-family:Archivo,system-ui,sans-serif;margin:0;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(60rem 30rem at 85% -5%,rgba(139,92,246,.28),transparent),radial-gradient(50rem 26rem at 5% 20%,rgba(182,243,74,.10),transparent);pointer-events:none}
+::selection{background:var(--ac);color:#0d0a14}
+.d{font-family:"Archivo Black",Archivo,sans-serif;font-weight:400;line-height:.95;letter-spacing:-.01em;text-transform:uppercase}
+.wrap{max-width:68rem;margin:0 auto;padding:0 4vw}
+/* hud */
+.hud{position:sticky;top:0;z-index:50;background:rgba(13,10,20,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--ln)}
+.hud-in{display:flex;align-items:center;gap:1rem;padding:.9rem 4vw;max-width:68rem;margin:0 auto}
+.logo{font-family:"Archivo Black",sans-serif;font-size:1.1rem;text-decoration:none}
+.logo i{font-style:normal;color:var(--ac)}
+.pill{border:1px solid var(--ln);border-radius:999px;padding:.45rem .95rem;font-size:.8rem;font-weight:600;white-space:nowrap}
+.pill b{color:var(--ac)}
+.xpbar{flex:1;height:10px;background:#241d3d;border-radius:99px;overflow:hidden;min-width:80px}
+.xpbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pu),var(--ac));border-radius:99px;transition:width .6s ease}
+/* telas */
+.view{display:none;padding:3rem 0 5rem;animation:fd .45s ease}
+.view.on{display:block}
+@keyframes fd{from{opacity:0;transform:translateY(16px)}}
+.hero{text-align:center;padding:4rem 0 2rem}
+.hero h1{font-size:clamp(2.6rem,8vw,5.5rem);margin:0}
+.hero h1 span{color:var(--ac)}
+.hero p{color:var(--mut);font-size:1.1rem;max-width:36rem;margin:1.2rem auto 2rem;line-height:1.7}
+.btn{display:inline-block;background:var(--ac);color:#0d0a14;border:0;border-radius:999px;padding:1rem 2.2rem;font-weight:800;font-size:.9rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;text-decoration:none;font-family:inherit}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--ln);margin-left:.8rem}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.1rem;margin-top:2.5rem}
+.mod{background:var(--card);border:1px solid var(--ln);border-radius:var(--rd);padding:1.8rem;cursor:pointer;transition:transform .3s,border-color .3s;position:relative}
+.mod:hover{transform:translateY(-4px);border-color:var(--pu)}
+.mod.done{border-color:rgba(182,243,74,.5)}
+.mod h3{margin:.7rem 0 .4rem;font-size:1.25rem}
+.mod p{color:var(--mut);font-size:.92rem;line-height:1.6;margin:0 0 1rem}
+.tag{font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--pk);font-weight:800}
+.stars{color:var(--ac);letter-spacing:.2em;font-size:.9rem}
+/* quiz */
+.qtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:.8rem}
+.hearts{font-size:1.3rem;letter-spacing:.15em}
+.lesson{background:var(--card);border:1px solid var(--ln);border-left:4px solid var(--pu);border-radius:var(--rd);padding:1.8rem;margin-bottom:1.8rem;line-height:1.75;color:#e4def7}
+.lesson b{color:var(--ac)}
+.qcard{background:var(--card);border:1px solid var(--ln);border-radius:var(--rd);padding:2rem}
+.qcard h2{font-size:1.4rem;margin:0 0 1.4rem;line-height:1.45}
+.opt{display:block;width:100%;box-sizing:border-box;text-align:left;background:#100c1d;border:1px solid var(--ln);color:var(--ink);border-radius:14px;padding:1rem 1.2rem;margin-bottom:.7rem;font-size:1rem;cursor:pointer;font-family:inherit;transition:border-color .2s,background .2s}
+.opt:hover:not(:disabled){border-color:var(--pu)}
+.opt.ok{background:rgba(182,243,74,.14);border-color:var(--ac)}
+.opt.no{background:rgba(244,114,182,.12);border-color:var(--pk)}
+.opt:disabled{cursor:default;opacity:.85}
+.why{border-radius:14px;padding:1rem 1.2rem;margin:1rem 0;line-height:1.65;display:none}
+.why.on{display:block}
+.why.ok{background:rgba(182,243,74,.1);border:1px solid rgba(182,243,74,.4)}
+.why.no{background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.4)}
+.why b{color:var(--ac)}
+.next{display:none;margin-top:1rem}
+/* resultado */
+.res{text-align:center}
+.res h2{font-size:clamp(2rem,6vw,3.4rem);margin:0 0 .6rem}
+.res .big{font-family:"Archivo Black",sans-serif;font-size:clamp(3.4rem,10vw,6rem);color:var(--ac)}
+.res p{color:var(--mut)}
+.shelf{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin:2rem 0}
+.badge{background:var(--card);border:1px solid rgba(182,243,74,.5);border-radius:16px;padding:1rem 1.4rem;font-weight:700}
+.badge small{display:block;color:var(--mut);font-weight:400;margin-top:.3rem}
+.badge.lock{opacity:.35;border-color:var(--ln);filter:grayscale(1)}
+/* placar */
+.board{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:2.5rem 0}
+.cell{background:var(--card);border:1px solid var(--ln);border-radius:16px;padding:1.2rem;text-align:center}
+.cell b{font-family:"Archivo Black",sans-serif;font-size:1.7rem;display:block;color:var(--ac)}
+.cell span{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mut)}
+table.rank{width:100%;border-collapse:collapse;margin-top:1rem}
+table.rank td,table.rank th{padding:.9rem .4rem;border-bottom:1px solid var(--ln);text-align:left}
+table.rank th{font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;color:var(--mut)}
+.toast{position:fixed;left:50%;bottom:2rem;transform:translate(-50%,120px);background:var(--ac);color:#0d0a14;font-weight:800;padding:1rem 1.8rem;border-radius:999px;transition:transform .4s ease;z-index:90}
+.toast.on{transform:translate(-50%,0)}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.board{grid-template-columns:repeat(2,1fr)}.hud-in{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){.view{animation:none}.xpbar i{transition:none}}
+</style>
+</head>
+<body>
+<header class="hud"><div class="hud-in">
+<a class="logo" href="#" id="home">MARKETING<i>QUEST</i></a>
+<div class="xpbar" title="Progresso de XP"><i id="xpfill"></i></div>
+<span class="pill">Nv. <b id="hlevel">1</b></span>
+<span class="pill">⚡ <b id="hxp">0</b> XP</span>
+<span class="pill">🔥 <b id="hstreak">0</b></span>
+</div></header>
+
+<main class="wrap">
+<!-- HOME -->
+<section class="view on" id="v-home">
+<div class="hero">
+<h1 class="d">Aprenda marketing <span>jogando.</span></h1>
+<p>5 missões, quizzes rápidos, XP, sequência e selos. Termine uma missão por dia e saia do zero ao funil completo.</p>
+<button class="btn" id="start">Começar missão</button>
+<button class="btn ghost" id="how">Como funciona</button>
+</div>
+<div class="board">
+<div class="cell"><b id="blevel">Iniciante</b><span> patente</span></div>
+<div class="cell"><b id="bdone">0/5</b><span>missões</span></div>
+<div class="cell"><b id="bacc">0%</b><span>precisão</span></div>
+<div class="cell"><b id="bbadges">0</b><span>selos</span></div>
+</div>
+<h2 class="d" style="font-size:1.6rem">Escolha a missão</h2>
+<div class="grid" id="mods"></div>
+<h2 class="d" style="font-size:1.6rem;margin-top:3rem">Ranking local</h2>
+<table class="rank"><thead><tr><th>#</th><th>Jogador</th><th>XP</th><th>Patente</th></tr></thead><tbody id="rank"></tbody></table>
+</section>
+
+<!-- QUIZ -->
+<section class="view" id="v-quiz">
+<div class="qtop">
+<span class="pill" id="qmod">Missão</span>
+<span class="pill" id="qq">Pergunta 1 de 3</span>
+<span class="hearts" id="hearts">❤❤❤</span>
+</div>
+<div class="lesson" id="lesson"></div>
+<div class="qcard">
+<h2 id="qt"></h2>
+<div id="opts"></div>
+<div class="why" id="why"></div>
+<button class="btn next" id="next">Próxima →</button>
+</div>
+</section>
+
+<!-- RESULTADO -->
+<section class="view" id="v-res">
+<div class="res">
+<h2 class="d">Missão cumprida</h2>
+<div class="big" id="rxp">+0 XP</div>
+<p id="rmsg"></p>
+<div class="shelf" id="shelf"></div>
+<button class="btn" id="back">Voltar ao mapa</button>
+</div>
+</section>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+/* ===== DADOS ===== */
+var MODS=[
+{id:"pos",tag:"Missão 1",name:"Posicionamento",desc:"Por que cliente escolhe você e não o vizinho. Proposta de valor em uma frase.",lesson:"Posicionamento é o <b>lugar que sua marca ocupa na cabeça do cliente</b>. Não é sobre ser melhor em tudo, é sobre ser <b>óbvio para alguém específico</b>. Fórmula: eu ajudo [público] a [resultado] sem [dor]. Exemplo: eu ajudo donos de bike a pedalar sem dor no joelho, sem trocar de bike.",
+qs:[
+{q:"Qual frase tem posicionamento mais forte?",o:["Fazemos marketing digital","Ajudamos dentistas a lotar a agenda em 90 dias","Somos uma agência criativa","Atendemos todos os segmentos"],a:1,w:"Público específico, resultado claro e prazo. O resto é genérico e esquecível."},
+{q:"Posicionamento acontece principalmente...",o:["No logo da empresa","Na cabeça do cliente","No preço mais baixo","No número de seguidores"],a:1,w:"Posicionamento é percepção. Se o cliente não resume você em uma frase, você não tem um."},
+{q:"Diferenciação sustentável costuma vir de...",o:["Copiar o líder","Promessa verificável e repetível","Slogan bonito","Postar todo dia"],a:1,w:"Promessa que se cumpre todo dia vira reputação. Slogan sem entrega vira piada."}]},
+{id:"per",tag:"Missão 2",name:"Persona e dor",desc:"Quem compra, o que dói e o que a pessoa realmente quer dizer quando pede desconto.",lesson:"Persona não é idade e signo, é <b>dor, desejo e objeção</b>. Toda compra resolve uma dor ou aproxima de um desejo. Sua missão: descobrir a <b>dor verdadeira</b> por trás do pedido. Quem pede desconto quase nunca quer preço menor, quer <b>certeza de que vai funcionar</b>.",
+qs:[
+{q:"A melhor pergunta para descobrir a dor real é...",o:["Qual seu orçamento?","O que acontece se isso continuar assim por 6 meses?","Você prefere A ou B?","Quando podemos fechar?"],a:1,w:"Projetar o custo de não agir revela a urgência. Orçamento sem dor vira queda de preço."},
+{q:"Persona útil descreve principalmente...",o:["Idade, cidade e time","Dor, desejo, objeções e onde presta atenção","Cor favorita e hobbies","Cargo e salário"],a:1,w:"Demografia segmenta anúncio. Dor e objeção fecham venda e guiam o copy."},
+{q:"Objeção de preço geralmente esconde...",o:["Falta de dinheiro","Falta de percepção de valor ou de confiança","Pressa","Falta de tempo"],a:1,w:"Quando o valor percebido supera o preço, a objeção evapora. Venda certeza, não desconto."}]},
+{id:"fun",tag:"Missão 3",name:"Funil",desc:"Atração, captura, nutrição e venda. Onde cada conteúdo mora e por quê.",lesson:"Funil tem 3 andares: <b>topo</b> (atrair quem nunca ouviu falar), <b>meio</b> (educar quem já tem interesse) e <b>fundo</b> (converter quem está pronto). Erro clássico: pedir casamento no primeiro encontro, ou seja, <b>vender para público frio</b>. Cada etapa pede um conteúdo e uma métrica.",
+qs:[
+{q:"Post viral no Instagram é conteúdo de...",o:["Fundo de funil","Topo de funil","Pós-venda","Carrinho"],a:1,w:"Alcance atrai desconhecidos. Venda vem depois, com prova e oferta para público aquecido."},
+{q:"A métrica rainha do meio de funil é...",o:["Curtidas","Captura de contato e consumo de conteúdo","Faturamento","Seguidores"],a:1,w:"Meio de funil transforma atenção em permissão: e-mail, WhatsApp e conteúdo consumido."},
+{q:"Depoimento com resultado converte melhor no...",o:["Topo","Meio","Fundo de funil","Blog"],a:2,w:"Quem está quase comprando precisa de prova e remoção de risco. Depoimento é munição de fundo."}]},
+{id:"cpy",tag:"Missão 4",name:"Copy",desc:"Títulos, bullets e CTAs que fazem o dedo parar e o cartão sair.",lesson:"Copy bom segue <b>clareza antes de esperteza</b>. Estrutura campeã: <b>promessa específica + prova + CTA único</b>. Título vende o clique, bullets vendem a leitura, CTA vende a ação. Um CTA por tela: <b>dois botões dividem a atenção e matam a conversão</b>.",
+qs:[
+{q:"Qual título converte mais?",o:["Bem-vindo ao nosso site","Dobre suas vendas em 90 dias ou devolvemos o valor","Soluções inovadoras","Nossa história"],a:1,w:"Promessa específica com risco invertido. O resto não diz por que clicar."},
+{q:"Regra de ouro do CTA:",o:["Um por tela, verbo de ação","Quanto mais botões, melhor","Esconder no rodapé","Trocar o texto todo dia"],a:0,w:"Uma tela, uma ação. Clareza converte, menu dispersa."},
+{q:"Bullets bons destacam...",o:["Características técnicas","Benefícios e resultados para o cliente","A história da empresa","Prêmios recebidos"],a:1,w:"Cliente compra resultado, não especificação. Traduza tudo em benefício."}]},
+{id:"trf",tag:"Missão 5",name:"Tráfego e métricas",desc:"CAC, LTV, ROAS e o teste de R$ 20 que separa chute de método.",lesson:"Tráfego pago é <b>aluguel de atenção com meta de lucro</b>. As 3 contas que mandam: <b>CAC</b> (custo por cliente), <b>LTV</b> (quanto cada cliente rende) e <b>ROAS</b> (retorno por real investido). Regra de ouro: <b>LTV maior que 3 vezes o CAC</b>. E nunca escale o que não foi testado pequeno.",
+qs:[
+{q:"LTV de R$ 900 e CAC de R$ 200. Veredito?",o:["Ruim, pausar tudo","Saudável, pode escalar com controle","Tanto faz","Dobrar o orçamento hoje"],a:1,w:"Proporção de 4,5 para 1, acima do mínimo de 3. Escala com controle, de olho no CAC marginal."},
+{q:"Primeiro teste de um anúncio novo deve ser...",o:["R$ 5 mil para aprender rápido","Verba pequena com hipótese e prazo definidos","Impulsionar e torcer","Esperar o orgânico"],a:1,w:"Teste barato valida a hipótese. Escala só entra depois do sinal verde dos números."},
+{q:"CTR alto com conversão baixa sugere...",o:["Anúncio ruim","Página de destino fraca ou público errado","Falta de verba","Azar"],a:1,w:"O clique prova que o anúncio atrai. Se ninguém compra, o gargalo está depois do clique."}]}
+];
+var LEVELS=[[0,"Iniciante"],[300,"Aprendiz"],[700,"Estrategista"],[1200,"Growth"],[1800,"Lenda"]];
+/* ===== ESTADO ===== */
+var S;
+try{S=JSON.parse(localStorage.getItem("mq1")||"null")||{}}catch(e){S={}}
+S.xp=S.xp||0;S.done=S.done||{};S.hits=S.hits||0;S.tries=S.tries||0;S.badges=S.badges||[];S.last=S.last||"";S.streak=S.streak||0;S.name=S.name||"Você";
+function save(){try{localStorage.setItem("mq1",JSON.stringify(S))}catch(e){}}
+function level(){var l=LEVELS[0][1];for(var i=0;i<LEVELS.length;i++){if(S.xp>=LEVELS[i][0])l=LEVELS[i][1]}return l}
+(function streak(){
+var t=new Date().toISOString().slice(0,10);
+if(S.last===t)return;
+var y=new Date(Date.now()-864e5).toISOString().slice(0,10);
+S.streak=(S.last===y)?S.streak+1:1;S.last=t;save();
+})();
+/* ===== UI ===== */
+var $=function(s){return document.querySelector(s)};
+var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+function toast(m){var t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(t._x);t._x=setTimeout(function(){t.classList.remove("on")},2600)}
+function badge(id,icon,name,sub){if(S.badges.indexOf(id)<0){S.badges.push(id);save();toast("Selo desbloqueado: "+name)}}
+function hud(){
+$("#hxp").textContent=S.xp;$("#hstreak").textContent=S.streak;
+var lv=level();$("#hlevel").textContent=LEVELS.map(function(l){return l[1]}).indexOf(lv)+1;
+var next=LEVELS[LEVELS.length-1][0];
+for(var i=0;i<LEVELS.length;i++){if(S.xp<LEVELS[i][0]){next=LEVELS[i][0];break}}
+var prev=0;
+for(var j=0;j<LEVELS.length;j++){if(S.xp>=LEVELS[j][0])prev=LEVELS[j][0]}
+$("#xpfill").style.width=Math.min(100,Math.round((S.xp-prev)/Math.max(1,next-prev)*100))+"%";
+$("#blevel").textContent=lv;
+var dk=Object.keys(S.done).length;$("#bdone").textContent=dk+"/5";
+$("#bacc").textContent=(S.tries?Math.round(S.hits/S.tries*100):0)+"%";
+$("#bbadges").textContent=S.badges.length;
+}
+function show(id){$$(".view").forEach(function(v){v.classList.remove("on")});$(id).classList.add("on");window.scrollTo(0,0)}
+function map(){
+var box=$("#mods");box.innerHTML="";
+MODS.forEach(function(m){
+var d=!!S.done[m.id],el=document.createElement("div");
+el.className="mod"+(d?" done":"");
+el.innerHTML='<span class="tag">'+m.tag+(d?" • concluída":"")+'</span><h3>'+m.name+'</h3><p>'+m.desc+'</p><span class="stars">'+(d?"★★★":"☆☆☆")+"</span>";
+el.onclick=function(){startQuiz(m)};box.appendChild(el);
+});
+var r=$("#rank");r.innerHTML="";
+var rows=[{n:S.name,x:S.xp},{n:"Ana (demo)",x:1450},{n:"Rafa (demo)",x:820},{n:"Ju (demo)",x:260}];
+rows.sort(function(a,b){return b.x-a.x});
+rows.forEach(function(p,i){var tr=document.createElement("tr");tr.innerHTML="<td>"+(i+1)+"</td><td>"+p.n+"</td><td>"+p.x+" XP</td><td>"+lvlName(p.x)+"</td>";r.appendChild(tr)});
+}
+function lvlName(x){var l=LEVELS[0][1];for(var i=0;i<LEVELS.length;i++){if(x>=LEVELS[i][0])l=LEVELS[i][1]}return l}
+/* ===== QUIZ ===== */
+var M,Q=0,HP=0,GAIN=0,HITS=0;
+function startQuiz(m){
+M=m;Q=0;HP=3;GAIN=0;HITS=0;
+if(!S.name||S.name==="Você"){var n=prompt("Como quer aparecer no ranking?","Você");if(n&&n.trim()){S.name=n.trim().slice(0,20);save()}}
+$("#lesson").innerHTML="<b>"+m.tag+": "+m.name+".</b> "+m.lesson;
+ask();show("#v-quiz");hud();
+}
+function ask(){
+var q=M.qs[Q];
+$("#qmod").textContent=M.tag+": "+M.name;
+$("#qq").textContent="Pergunta "+(Q+1)+" de "+M.qs.length;
+$("#hearts").textContent="❤".repeat(Math.max(0,HP))+"🖤".repeat(Math.max(0,3-HP));
+$("#qt").textContent=q.q;
+var box=$("#opts");box.innerHTML="";
+$("#why").className="why";$("#next").style.display="none";
+q.o.forEach(function(txt,i){
+var b=document.createElement("button");b.className="opt";b.textContent=txt;
+b.onclick=function(){answer(i,b)};box.appendChild(b);
+});
+}
+function answer(i,btn){
+var q=M.qs[Q],opts=$$("#opts .opt");
+opts.forEach(function(b){b.disabled=true});
+S.tries++;
+var ok=(i===q.a),w=$("#why");
+if(ok){
+btn.classList.add("ok");S.hits++;HITS++;
+var pts=100+(Q===0?0:25*Q)+(HP===3?50:0);
+GAIN+=pts;
+w.className="why on ok";w.innerHTML="<b>+"+pts+" XP.</b> "+q.w;
+}else{
+btn.classList.add("no");opts[q.a].classList.add("ok");HP--;
+w.className="why on no";w.innerHTML="<b>Resposta certa marcada em verde.</b> "+q.w;
+}
+save();hud();
+if(HP<=0){$("#next").textContent="Ver resultado";}$("#next").style.display="inline-block";
+$("#next").onclick=function(){(Q<M.qs.length-1&&HP>0)?(Q++,ask()):finish()};
+}
+function finish(){
+S.xp+=GAIN;
+var perfect=(HITS===M.qs.length);
+if(!S.done[M.id]){S.done[M.id]=true;GAIN+=100}
+badge("first","🎯","Primeira missão","concluiu 1 quiz");
+if(S.streak>=2)badge("streak","🔥","Em chamas","2 dias seguidos");
+if(perfect)badge("perfect","💯","Perfeita","100% numa missão");
+if(Object.keys(S.done).length>=5)badge("all","🏆","Zerou o jogo","5 de 5 missões");
+save();
+$("#rxp").textContent="+"+GAIN+" XP";
+$("#rmsg").textContent=perfect?"Missão perfeita. Esse é o padrão de quem cresce.":(HP<=0?"Sem corações, mas com aprendizado. Revise a lição e tente de novo amanhã.":"Missão cumprida. Consistência vence intensidade.");
+var sh=$("#shelf");sh.innerHTML="";
+var all=[["first","🎯","Primeira missão"],["streak","🔥","Em chamas"],["perfect","💯","Perfeita"],["all","🏆","Zerou o jogo"]];
+all.forEach(function(b){
+var has=S.badges.indexOf(b[0])>=0,d=document.createElement("div");
+d.className="badge"+(has?"":" lock");d.innerHTML=b[1]+" "+b[2]+"<small>"+(has?"desbloqueado":"bloqueado")+"</small>";
+sh.appendChild(d);
+});
+show("#v-res");hud();map();
+}
+$("#start").onclick=function(){var nx=MODS.filter(function(m){return !S.done[m.id]})[0]||MODS[0];startQuiz(nx)};
+$("#how").onclick=function(){toast("Complete missões, ganhe XP, suba de patente e colecione selos")};
+$("#home").onclick=function(e){e.preventDefault();map();hud();show("#v-home")};
+$("#back").onclick=function(){map();hud();show("#v-home")};
+map();hud();
+})();
+</script>
+</body>
+</html>
