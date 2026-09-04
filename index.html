@@ -181,11 +181,16 @@ var S;
 try{S=JSON.parse(localStorage.getItem("mq1")||"null")||{}}catch(e){S={}}
 S.xp=S.xp||0;S.done=S.done||{};S.hits=S.hits||0;S.tries=S.tries||0;S.badges=S.badges||[];S.last=S.last||"";S.streak=S.streak||0;S.name=S.name||"Você";
 function save(){try{localStorage.setItem("mq1",JSON.stringify(S))}catch(e){}}
+/** @param {Date} day @returns {string} */
+function localDay(day){
+var month=String(day.getMonth()+1).padStart(2,"0");
+return day.getFullYear()+"-"+month+"-"+String(day.getDate()).padStart(2,"0");
+}
 function level(){var l=LEVELS[0][1];for(var i=0;i<LEVELS.length;i++){if(S.xp>=LEVELS[i][0])l=LEVELS[i][1]}return l}
 (function streak(){
-var t=new Date().toISOString().slice(0,10);
+var today=new Date(),t=localDay(today);
 if(S.last===t)return;
-var y=new Date(Date.now()-864e5).toISOString().slice(0,10);
+var yesterday=new Date(today);yesterday.setDate(today.getDate()-1);var y=localDay(yesterday);
 S.streak=(S.last===y)?S.streak+1:1;S.last=t;save();
 })();
 /* ===== UI ===== */
@@ -207,6 +212,11 @@ $("#bacc").textContent=(S.tries?Math.round(S.hits/S.tries*100):0)+"%";
 $("#bbadges").textContent=S.badges.length;
 }
 function show(id){$$(".view").forEach(function(v){v.classList.remove("on")});$(id).classList.add("on");window.scrollTo(0,0)}
+/** @param {string} name @returns {string} */
+function escapeName(name){
+var entities={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"};
+return String(name).replace(/[&<>"']/g,function(character){return entities[character]});
+}
 function map(){
 var box=$("#mods");box.innerHTML="";
 MODS.forEach(function(m){
@@ -218,7 +228,7 @@ el.onclick=function(){startQuiz(m)};box.appendChild(el);
 var r=$("#rank");r.innerHTML="";
 var rows=[{n:S.name,x:S.xp},{n:"Ana (demo)",x:1450},{n:"Rafa (demo)",x:820},{n:"Ju (demo)",x:260}];
 rows.sort(function(a,b){return b.x-a.x});
-rows.forEach(function(p,i){var tr=document.createElement("tr");tr.innerHTML="<td>"+(i+1)+"</td><td>"+p.n+"</td><td>"+p.x+" XP</td><td>"+lvlName(p.x)+"</td>";r.appendChild(tr)});
+rows.forEach(function(p,i){var tr=document.createElement("tr");tr.innerHTML="<td>"+(i+1)+"</td><td>"+escapeName(p.n)+"</td><td>"+p.x+" XP</td><td>"+lvlName(p.x)+"</td>";r.appendChild(tr)});
 }
 function lvlName(x){var l=LEVELS[0][1];for(var i=0;i<LEVELS.length;i++){if(x>=LEVELS[i][0])l=LEVELS[i][1]}return l}
 /* ===== QUIZ ===== */
@@ -261,16 +271,16 @@ if(HP<=0){$("#next").textContent="Ver resultado";}$("#next").style.display="inli
 $("#next").onclick=function(){(Q<M.qs.length-1&&HP>0)?(Q++,ask()):finish()};
 }
 function finish(){
-S.xp+=GAIN;
 var perfect=(HITS===M.qs.length);
-if(!S.done[M.id]){S.done[M.id]=true;GAIN+=100}
-badge("first","🎯","Primeira missão","concluiu 1 quiz");
+if(perfect&&!S.done[M.id]){S.done[M.id]=true;GAIN+=100}
+S.xp+=GAIN;
+if(perfect)badge("first","🎯","Primeira missão","concluiu 1 quiz");
 if(S.streak>=2)badge("streak","🔥","Em chamas","2 dias seguidos");
 if(perfect)badge("perfect","💯","Perfeita","100% numa missão");
 if(Object.keys(S.done).length>=5)badge("all","🏆","Zerou o jogo","5 de 5 missões");
 save();
 $("#rxp").textContent="+"+GAIN+" XP";
-$("#rmsg").textContent=perfect?"Missão perfeita. Esse é o padrão de quem cresce.":(HP<=0?"Sem corações, mas com aprendizado. Revise a lição e tente de novo amanhã.":"Missão cumprida. Consistência vence intensidade.");
+$("#rmsg").textContent=perfect?"Missão concluída com todas as respostas corretas.":"Você ganhou XP pelos acertos. Revise a lição e acerte todas as perguntas para concluir a missão.";
 var sh=$("#shelf");sh.innerHTML="";
 var all=[["first","🎯","Primeira missão"],["streak","🔥","Em chamas"],["perfect","💯","Perfeita"],["all","🏆","Zerou o jogo"]];
 all.forEach(function(b){
